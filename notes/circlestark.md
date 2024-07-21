@@ -1,8 +1,3 @@
----
-title: Circle STARK notes
-
----
-
 # Circle STARK notes
 In Starks, we typically want a small prime $p$ with $p + 1$ smooth. We choose the Mersenne prime M31.
 
@@ -46,8 +41,7 @@ Under the isomorphisim due to the stereographic projection, we can write the cir
  
  ### Proposition 1. 
  The existence of standard position cosets (of size $2^n$) is *equivalent* to "$p$ is CFFT-friendly" supporting the order $n$. Note that the standard position cosets can be written as 
- $$D = Q \cdot G_n = Q \cdot G_{n - 1} \cup Q^{-1} \cdot G_{n - 1}$$ 
-where $Q \in C(\mathbb{F_p})$. 
+ $$ D = Q \cdot G_n = Q \cdot G_{n - 1} \cup Q^{-1} \cdot G_{n - 1}$$ where $Q \in C(\mathbb{F_p})$. 
  
 **Proof**: The quick reason is because the quotient group $C(\mathbb{F}_p)/G_{n - 1}$ is cyclic so there is at most one $J$-invariant pair $(Q \cdot G_{n - 1},\  Q^{-1} \cdot G_{n - 1})$ where $Q \cdot G_{n - 1} \neq  Q^{-1} \cdot G_{n - 1}$  (also forms a coset in the quotient group). Then, since the order of $Q$ is $2^{n + 1}$ we have that $Q^4$ has order $2^{n - 1}$ which is also the order of $G_{n - 1}$. So $Q \cdot G_{n -1}$ has order 4. Finally, the existence of order 4 elements in $C(\mathbb{F}_p)/G_{n - 1}$ is equivalent to the claim that $2^{n + 1} | (p + 1). \blacksquare$
  
@@ -68,11 +62,10 @@ Challenge for reader. Hint: follows from considering $D = Q \cdot G_{m - 1} \cup
 
 ## The space of polynomials and circle codes
 ### Definition: 
-
 Let $\mathcal{L}_N(F)$ be the **space of all bivariate polynomials with coefficients in F and of total degree at most $N / 2$ over the circle curve**
 $$ \mathcal{L}_N (F) = \{ p(x, y) \in F[x, y]/(x^2 + y^2 - 1): \deg p \leq N / 2 \}$$
 
-The important properties of $\mathcal{L}_N (F)$ are:
+THe important properties of $\mathcal{L}_N (F)$ are:
 1) Rotation invariance (for "next-neighbor relation" and efficient encoding)
 2) good separability (maximum distance separable codes)
 
@@ -97,4 +90,43 @@ For circle STARKS, we will consider **purely two-adic $N = 2^n$** and encoding w
  
  $$\nu (D) = \{ v \in \mathcal{L}_N : v |_D = 0 \}$$
  
- 
+### Circle FFT
+The *circle* FFT for a twin-coset 
+$$ D = Q \cdot G_{n - 1} \cup Q^{-1} \cdot G_{n - 1} $$
+
+$Q \in C(\mathbb{F}_p) \backslash  G_n$ interpolates functions from $F^D$ by polynomials from the space $\mathcal{L_N} (F)$. THis is done by computing the coefficients using the **FFT-basis** $\mathcal{B}_n$.
+
+Here is the main theorem for the CFFT:
+
+Consider a finite extension field $F$ of $\mathbb{F}_p$ and a twin-coset $D$ (order $|D| = 2^n$) of the cyclic subgroup $G_{n - 1}$ of $C(\mathbb{F}_p)$. Then, there exists an algorithm **that takes a function from $F^D$ and computes the coefficients wrt the basis $\mathbb{B}_n$**. This has a cost of $N \cdot n$ additions over $F$ and $N \cdot n/2$ multiplications over $\mathbb{F}_p$. 
+
+Recall that $\dim \mathcal{L_N} (F) = N + 1$ but $\mathcal{L'_N} (F) := \dim \langle \mathcal{B_n} \rangle = N$ which is indeed a subsapce of the $\mathcal{L_N}(F)$. 
+
+![Screenshot 2024-07-21 at 5.07.21 AM](https://hackmd.io/_uploads/HyS-cdcdA.png)
+
+
+### The sequence of domains
+Essentially, the twin-coset (WLOG think of standard position cosets) form a sequence of commutative diagrams with the seqeunce of subgroups $G_n$. 
+![Screenshot 2024-07-21 at 4.52.13 AM](https://hackmd.io/_uploads/H1duLd9uC.png)
+
+where $\phi_J: D \rightarrow D \backslash J$ quotient map by $P \rightarrow \{P, J(P) \}$. 
+
+### Circle FFT defintion
+The circle FFT, like standard FFTs, is a **divide-and-conquer** algorithm that recursively reduces teh interpolation problem for a polynomial $f \in F^D$. The idea is two split functions into even and odd terms to represent $f(x, y) = f_0 (x) + y \cdot f_1 (x)$.
+
+*(Circle FFT)* Let $D \subset C(\mathbb{F}_p)$ be a ***twin-coset*** of size $|D| = 2^n$. For $f \in F_D$ over $D$, we do this FFT procedure to get coefficients $c_k \in F, 0 \leq k \leq 2^n - 1*$ such that **$\sum_{k = 0}^{2^n - 1} c_k \cdot b_k$ evals to $f$ over $d$.**
+
+This FFT can be implemented using a butterfly network (e.g. Cooley-Tukey FFT).
+
+### Properties of the FFT Space
+$$ \mathcal{L}_N(F) = \mathcal{L'}_N (F) + \langle v_n \rangle$$
+
+The *FFT space* $\mathcal{L'}_N (F)$ is invariant under teh action of $G_n$. Recall that $\mathcal{L'}_N (F)$ is the span of monomials $1, x, ..., x^{N / 2 - 1}$ and $y, y \cdot x, ... y \cdot x^{N / 2 - 1}$. Then, consider the fanishing polynomial of $G = G_n$:
+$$v_G (x, y) = y \cdot \Pi_{i = 1}^{N/2 - 1} (x - x_k)$$
+
+By the degree of $x$, $v_G$ should be in $\mathcal{L'}_N (F)$. Since $y \cdot x^{N/2 - 1}$ cannot be represented as a linear combination of lower degree monomials, we can include it to build 
+$$\mathcal{L'}_N (F) = \langle x^k \cdot y^j : \deg (x^k \cdot y^j) < N/2 \rangle + \langle v_G \rangle $$
+
+And rotation by a degree $< N / 2$ polynomial is also has degree $< N/2$
+
+#### (Lemma 7) over every $G_n$-invariant and $J$-invariant domain $D \subseteq C(\mathbb{F}_p), the vanishing polynomial $v_n$ is orthogonal to the FFT space $\mathcal{L'}_N (F)$ so $\langle v_n, f \rangle = 0$
