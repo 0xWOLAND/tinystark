@@ -1,3 +1,8 @@
+---
+title: Circle STARK notes
+
+---
+
 # Circle STARK notes
 In Starks, we typically want a small prime $p$ with $p + 1$ smooth. We choose the Mersenne prime M31.
 
@@ -41,7 +46,8 @@ Under the isomorphisim due to the stereographic projection, we can write the cir
  
  ### Proposition 1. 
  The existence of standard position cosets (of size $2^n$) is *equivalent* to "$p$ is CFFT-friendly" supporting the order $n$. Note that the standard position cosets can be written as 
- $$ D = Q \cdot G_n = Q \cdot G_{n - 1} \cup Q^{-1} \cdot G_{n - 1}$$ where $Q \in C(\mathbb{F_p})$. 
+ $$D = Q \cdot G_n = Q \cdot G_{n - 1} \cup Q^{-1} \cdot G_{n - 1}$$ 
+where $Q \in C(\mathbb{F_p})$. 
  
 **Proof**: The quick reason is because the quotient group $C(\mathbb{F}_p)/G_{n - 1}$ is cyclic so there is at most one $J$-invariant pair $(Q \cdot G_{n - 1},\  Q^{-1} \cdot G_{n - 1})$ where $Q \cdot G_{n - 1} \neq  Q^{-1} \cdot G_{n - 1}$  (also forms a coset in the quotient group). Then, since the order of $Q$ is $2^{n + 1}$ we have that $Q^4$ has order $2^{n - 1}$ which is also the order of $G_{n - 1}$. So $Q \cdot G_{n -1}$ has order 4. Finally, the existence of order 4 elements in $C(\mathbb{F}_p)/G_{n - 1}$ is equivalent to the claim that $2^{n + 1} | (p + 1). \blacksquare$
  
@@ -62,10 +68,11 @@ Challenge for reader. Hint: follows from considering $D = Q \cdot G_{m - 1} \cup
 
 ## The space of polynomials and circle codes
 ### Definition: 
+
 Let $\mathcal{L}_N(F)$ be the **space of all bivariate polynomials with coefficients in F and of total degree at most $N / 2$ over the circle curve**
 $$ \mathcal{L}_N (F) = \{ p(x, y) \in F[x, y]/(x^2 + y^2 - 1): \deg p \leq N / 2 \}$$
 
-THe important properties of $\mathcal{L}_N (F)$ are:
+The important properties of $\mathcal{L}_N (F)$ are:
 1) Rotation invariance (for "next-neighbor relation" and efficient encoding)
 2) good separability (maximum distance separable codes)
 
@@ -90,7 +97,7 @@ For circle STARKS, we will consider **purely two-adic $N = 2^n$** and encoding w
  
  $$\nu (D) = \{ v \in \mathcal{L}_N : v |_D = 0 \}$$
  
-### Circle FFT
+ ### Circle FFT
 The *circle* FFT for a twin-coset 
 $$ D = Q \cdot G_{n - 1} \cup Q^{-1} \cdot G_{n - 1} $$
 
